@@ -28,14 +28,47 @@ run() {
 
 # ---------- paths ----------
 SETUP_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_URL="${SETUP_REPO_URL:-https://github.com/yangjunjie0320/setup-zsh.git}"
+REPO_DIR="${SETUP_DEST_DIR:-$HOME/.setup-zsh}"
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
-# ---------- 0. require zsh ----------
+# ---------- ensure repo contents (for curl piping) ----------
+if [[ ! -d "$SETUP_DIR/zsh" || ! -f "$SETUP_DIR/setup.sh" ]]; then
+  if [[ -n "${SETUP_BOOTSTRAPPED:-}" ]]; then
+    echo "ERROR: Repo contents not found even after bootstrap."
+    exit 1
+  fi
+
+  log "Repository files missing in current context; cloning to $REPO_DIR"
+
+  if [[ ! -d "$REPO_DIR/.git" ]]; then
+    run "git clone \"$REPO_URL\" \"$REPO_DIR\""
+  else
+    log "Existing repo found at $REPO_DIR, reusing"
+  fi
+
+  export SETUP_BOOTSTRAPPED=1
+  exec "$REPO_DIR/setup.sh" "$@"
+fi
+
+# ---------- 0. require zsh, git and curl----------
 if ! command -v zsh >/dev/null 2>&1; then
   echo "ERROR: zsh not found. Please install zsh first."
   exit 1
 fi
 log "zsh found: $(command -v zsh)"
+
+if ! command -v git >/dev/null 2>&1; then
+  echo "ERROR: git not found. Please install git first."
+  exit 1
+fi
+log "git found: $(command -v git)"
+
+if ! command -v curl >/dev/null 2>&1; then
+  echo "ERROR: curl not found. Please install curl first."
+  exit 1
+fi
+log "curl found: $(command -v curl)"
 
 # ---------- 1. install oh-my-zsh ----------
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
