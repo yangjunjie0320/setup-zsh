@@ -68,7 +68,7 @@ log "curl found: $(command -v curl)"
 # ---------- 1. install oh-my-zsh ----------
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   log "Installing oh-my-zsh"
-  run 'RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+  run 'KEEP_ZSHRC=yes RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
 else
   log "oh-my-zsh already installed"
 fi
@@ -79,8 +79,9 @@ safe_link() {
   local dst="$2"
 
   if [[ -e "$dst" && ! -L "$dst" ]]; then
-    log "Skip $dst (exists and not a symlink)"
-    return
+    local bak="${dst}.bak"
+    log "Backing up existing $dst to $bak"
+    run "mv \"$dst\" \"$bak\""
   fi
 
   run "ln -sf \"$src\" \"$dst\""
