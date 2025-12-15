@@ -34,11 +34,6 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
 # ---------- ensure repo contents (for curl piping) ----------
 if [[ ! -d "$SETUP_DIR/zsh" || ! -f "$SETUP_DIR/setup.sh" ]]; then
-  if [[ -n "${SETUP_BOOTSTRAPPED:-}" ]]; then
-    echo "ERROR: Repo contents not found even after bootstrap."
-    exit 1
-  fi
-
   log "Repository files missing in current context; cloning to $REPO_DIR"
 
   if [[ ! -d "$REPO_DIR/.git" ]]; then
@@ -46,10 +41,10 @@ if [[ ! -d "$SETUP_DIR/zsh" || ! -f "$SETUP_DIR/setup.sh" ]]; then
   else
     log "Existing repo found at $REPO_DIR, reusing"
   fi
-
-  export SETUP_BOOTSTRAPPED=1
-  exec "$REPO_DIR/setup.sh" "$@"
+  export SETUP_DIR="$REPO_DIR"
 fi
+
+echo "SETUP_DIR: $SETUP_DIR"
 
 # ---------- 0. require zsh, git and curl----------
 if ! command -v zsh >/dev/null 2>&1; then
