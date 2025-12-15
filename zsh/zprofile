@@ -1,25 +1,10 @@
 # ~/.zprofile - login shell environment
 
-# Prepend Homebrew on macOS Apple Silicon
-if [[ -d /opt/homebrew/bin ]]; then
-  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+# source .bashrc
+if [[ -f $HOME/.bashrc ]]; then
+  source $HOME/.bashrc
 fi
 
-# Fallback Homebrew (Intel/macOS)
-if [[ -d /usr/local/bin ]]; then
-  export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
-fi
-
-# User bin
-if [[ -d "$HOME/.local/bin" ]]; then
-  export PATH="$HOME/.local/bin:$PATH"
-fi
-
-# Locale defaults
-export LANG="${LANG:-en_US.UTF-8}"
-export LC_ALL="${LC_ALL:-en_US.UTF-8}"
-
-# Keep SSH_AUTH_SOCK when using 1Password/agent proxies
-if [[ -S "$HOME/.1password/agent.sock" ]]; then
-  export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+if [[ -f $HOME/.bash_profile ]]; then
+  source $HOME/.bash_profile
 fi
