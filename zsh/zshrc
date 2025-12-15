@@ -13,13 +13,13 @@ plugins=(
 
 source "$ZSH/oh-my-zsh.sh"
 
-# Custom aliases
-[[ -f "$HOME/.zsh/aliases.zsh" ]] && source "$HOME/.zsh/aliases.zsh"
-[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
-
 # Local overrides (not committed)
 [[ -f "$HOME/.zsh/local.zsh" ]] && source "$HOME/.zsh/local.zsh"
 
 # Editor/locale defaults
 export EDITOR="${EDITOR:-vim}"
 export LANG="${LANG:-en_US.UTF-8}"
+
+# Use modern completion system
+autoload -Uz compinit
+compinit

@@ -14,16 +14,11 @@ Bootstrap zsh + Vim dotfiles with oh-my-zsh plugins. Supports dry-run.
 
 ## Usage
 ```bash
-cd /Users/yangjunjie/work/setup-zsh
-# dry run (no changes)
-./setup.sh --dry-run
-# apply (default)
-./setup.sh
+curl -fsSL https://raw.githubusercontent.com/yangjunjie0320/setup-zsh/main/setup.sh | bash
 ```
 
 ## Customization
 - Plugins: edit `plugins/plugins.txt` then rerun `setup.sh`.
-- Aliases: add to `zsh/aliases.zsh`.
 - Machine-specific tweaks: copy `zsh/local.zsh.example` to `~/.zsh/local.zsh`.
 - Vim: adjust `vim/vimrc`.
 
