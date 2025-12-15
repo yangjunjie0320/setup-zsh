@@ -2,7 +2,7 @@
 
 export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
 
-ZSH_THEME="robbyrussell"
+ZSH_THEME="fishy"
 
 # Plugins managed via plugins/plugins.txt (setup.sh clones them)
 plugins=(
