@@ -1,0 +1,13 @@
+# Copy to ~/.zsh/local.zsh for machine-specific overrides
+
+# Example: custom PATH entries
+# export PATH="$HOME/bin:$PATH"
+
+# Example: secrets or tokens (avoid committing real values)
+# export MY_SERVICE_TOKEN="replace-me"
+
+# Example: language/runtime version managers
+# export NVM_DIR="$HOME/.nvm"
+# [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+
+

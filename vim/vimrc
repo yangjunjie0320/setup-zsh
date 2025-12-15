@@ -1,0 +1,50 @@
+" Enable file type detection and syntax highlighting
+filetype on
+syntax on
+
+" Automatically reload the file if it is changed outside of Vim
+set autoread
+
+" Do not create backup files
+set nobackup
+
+" Highlight search results incrementally as you type
+set hlsearch
+set incsearch
+
+" Highlight matching parentheses and set match time
+set showmatch
+set matchtime=5
+
+" Disable Vi compatibility mode and enable tabs for Fortran files
+set nocompatible
+let fortran_have_tabs=1
+
+" TAB settings: use 4 spaces for a tab, and convert tabs to spaces
+set softtabstop=4 shiftwidth=4 expandtab
+
+" Enable automatic indentation and smart indentation
+set autoindent
+set smartindent
+
+" Miscellaneous settings
+set ruler              " Show the cursor position all the time
+set laststatus=2       " Always display the status line
+set statusline="The file is %F"  " Customize the status line
+
+" Color settings
+" Use a transparent background
+hi Normal guibg=NONE ctermbg=NONE
+
+" Enable cursor line highlighting
+set cursorline
+
+" Cursor line highlighting settings
+highlight Cursorline cterm=bold ctermbg=None ctermfg=None
+autocmd InsertEnter * highlight Cursorline cterm=underline,bold ctermbg=None ctermfg=None
+autocmd InsertLeave * highlight Cursorline cterm=bold ctermbg=None ctermfg=None
+
+" Enable line numbers and customize their appearance
+set number
+hi LineNr cterm=None ctermfg=grey ctermbg=None
+
