@@ -102,29 +102,41 @@ else
   log "No links.txt found, skipping symlink setup"
 fi
 
-# ---------- 3. install plugins ----------
-install_plugin() {
-  local name="$1"
-  local repo="$2"
+# ---------- 3. install plugins and themes ----------
+# install_repo <kind> <dest_base> <name> <repo>
+install_repo() {
+  local kind="$1"
+  local dest="$2/$3"
+  local name="$3"
+  local repo="$4"
 
-  if [[ ! -d "$ZSH_CUSTOM/plugins/$name" ]]; then
-    log "Installing plugin: $name"
-    run git clone "$repo" "$ZSH_CUSTOM/plugins/$name"
+  if [[ ! -d "$dest" ]]; then
+    log "Installing $kind: $name"
+    run git clone "$repo" "$dest"
   else
-    log "Plugin already exists: $name"
+    log "$kind already exists: $name"
   fi
 }
 
-PLUGIN_FILE="$SETUP_DIR/plugins/plugins.txt"
+# install_from_manifest <kind> <dest_base> <manifest>
+install_from_manifest() {
+  local kind="$1"
+  local dest_base="$2"
+  local manifest="$3"
 
-if [[ -f "$PLUGIN_FILE" ]]; then
+  if [[ ! -f "$manifest" ]]; then
+    log "No $(basename "$manifest") found, skipping $kind install"
+    return
+  fi
+
   while read -r name repo; do
     [[ -z "$name" || "$name" =~ ^# ]] && continue
-    install_plugin "$name" "$repo"
-  done < "$PLUGIN_FILE"
-else
-  log "No plugins.txt found, skipping plugin install"
-fi
+    install_repo "$kind" "$dest_base" "$name" "$repo"
+  done < "$manifest"
+}
+
+install_from_manifest "plugin" "$ZSH_CUSTOM/plugins" "$SETUP_DIR/plugins/plugins.txt"
+install_from_manifest "theme"  "$ZSH_CUSTOM/themes"  "$SETUP_DIR/themes.txt"
 
 # ---------- done ----------
 log "Setup completed (mode: $MODE)"
