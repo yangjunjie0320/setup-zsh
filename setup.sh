@@ -15,11 +15,14 @@ case "${1:-}" in
   --update)
     MODE="update"
     ;;
+  --uninstall)
+    MODE="uninstall"
+    ;;
   "")
     ;;
   *)
     echo "Unknown option: $1"
-    echo "Usage: setup.sh [--dry-run|--update]"
+    echo "Usage: setup.sh [--dry-run|--update|--uninstall]"
     exit 1
     ;;
 esac
@@ -55,6 +58,46 @@ if [[ ! -d "$SETUP_DIR/zsh" || ! -f "$SETUP_DIR/setup.sh" ]]; then
 fi
 
 echo "SETUP_DIR: $SETUP_DIR"
+
+# ---------- uninstall: remove managed symlinks and restore backups ----------
+uninstall_links() {
+  local manifest="$SETUP_DIR/links.txt"
+  if [[ ! -f "$manifest" ]]; then
+    log "No links.txt found, nothing to uninstall"
+    return
+  fi
+
+  while read -r src dst || [[ -n "$src" ]]; do
+    [[ -z "$src" || "$src" =~ ^# ]] && continue
+    local target="$HOME/$dst"
+
+    if [[ -L "$target" ]]; then
+      if [[ "$(readlink "$target")" == "$SETUP_DIR/"* ]]; then
+        log "Removing symlink $target"
+        run rm "$target"
+      else
+        log "Skipping $target (symlink not managed by setup-zsh)"
+        continue
+      fi
+    elif [[ -e "$target" ]]; then
+      log "Skipping $target (not a symlink)"
+      continue
+    fi
+
+    if [[ -e "${target}.bak" ]]; then
+      log "Restoring ${target}.bak to $target"
+      run mv "${target}.bak" "$target"
+    fi
+  done < "$manifest"
+}
+
+if [[ "$MODE" == "uninstall" ]]; then
+  log "Uninstalling setup-zsh symlinks"
+  uninstall_links
+  log "Uninstall complete. oh-my-zsh and cloned plugins/themes were left in place;"
+  log "remove ~/.oh-my-zsh and $REPO_DIR manually for a full cleanup."
+  exit 0
+fi
 
 # ---------- 0. require zsh, git and curl----------
 if ! command -v zsh >/dev/null 2>&1; then
