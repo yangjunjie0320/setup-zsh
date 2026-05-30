@@ -59,9 +59,11 @@ fi
 
 echo "SETUP_DIR: $SETUP_DIR"
 
+LINKS_MANIFEST="$SETUP_DIR/links.txt"
+
 # ---------- uninstall: remove managed symlinks and restore backups ----------
 uninstall_links() {
-  local manifest="$SETUP_DIR/links.txt"
+  local manifest="$LINKS_MANIFEST"
   if [[ ! -f "$manifest" ]]; then
     log "No links.txt found, nothing to uninstall"
     return
@@ -150,13 +152,11 @@ safe_link() {
   log "Linked $dst"
 }
 
-LINK_FILE="$SETUP_DIR/links.txt"
-
-if [[ -f "$LINK_FILE" ]]; then
+if [[ -f "$LINKS_MANIFEST" ]]; then
   while read -r src dst || [[ -n "$src" ]]; do
     [[ -z "$src" || "$src" =~ ^# ]] && continue
     safe_link "$SETUP_DIR/$src" "$HOME/$dst"
-  done < "$LINK_FILE"
+  done < "$LINKS_MANIFEST"
 else
   log "No links.txt found, skipping symlink setup"
 fi
