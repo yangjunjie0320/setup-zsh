@@ -22,7 +22,7 @@ run() {
   if [[ "$MODE" == "dry-run" ]]; then
     echo "[dry-run] $*"
   else
-    eval "$@"
+    "$@"
   fi
 }
 
@@ -37,7 +37,7 @@ if [[ ! -d "$SETUP_DIR/zsh" || ! -f "$SETUP_DIR/setup.sh" ]]; then
   log "Repository files missing in current context; cloning to $REPO_DIR"
 
   if [[ ! -d "$REPO_DIR/.git" ]]; then
-    run "git clone \"$REPO_URL\" \"$REPO_DIR\""
+    run git clone "$REPO_URL" "$REPO_DIR"
   else
     log "Existing repo found at $REPO_DIR, reusing"
   fi
@@ -68,7 +68,7 @@ log "curl found: $(command -v curl)"
 # ---------- 1. install oh-my-zsh ----------
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   log "Installing oh-my-zsh"
-  run 'KEEP_ZSHRC=yes RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+  run env KEEP_ZSHRC=yes RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 else
   log "oh-my-zsh already installed"
 fi
@@ -81,10 +81,10 @@ safe_link() {
   if [[ -e "$dst" && ! -L "$dst" ]]; then
     local bak="${dst}.bak"
     log "Backing up existing $dst to $bak"
-    run "mv \"$dst\" \"$bak\""
+    run mv "$dst" "$bak"
   fi
 
-  run "ln -sf \"$src\" \"$dst\""
+  run ln -sf "$src" "$dst"
   log "Linked $dst"
 }
 
@@ -99,7 +99,7 @@ install_plugin() {
 
   if [[ ! -d "$ZSH_CUSTOM/plugins/$name" ]]; then
     log "Installing plugin: $name"
-    run "git clone \"$repo\" \"$ZSH_CUSTOM/plugins/$name\""
+    run git clone "$repo" "$ZSH_CUSTOM/plugins/$name"
   else
     log "Plugin already exists: $name"
   fi
