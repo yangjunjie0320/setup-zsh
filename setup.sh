@@ -112,7 +112,7 @@ install_repo() {
 
   if [[ ! -d "$dest" ]]; then
     log "Installing $kind: $name"
-    run git clone "$repo" "$dest"
+    run git clone "$repo" "$dest" || log "WARN: failed to clone $kind $name, skipping"
   else
     log "$kind already exists: $name"
   fi
@@ -129,7 +129,7 @@ install_from_manifest() {
     return
   fi
 
-  while read -r name repo; do
+  while read -r name repo || [[ -n "$name" ]]; do
     [[ -z "$name" || "$name" =~ ^# ]] && continue
     install_repo "$kind" "$dest_base" "$name" "$repo"
   done < "$manifest"
