@@ -121,7 +121,13 @@ log "curl found: $(command -v curl)"
 # ---------- 1. install oh-my-zsh ----------
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   log "Installing oh-my-zsh"
-  run env KEEP_ZSHRC=yes RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  # Bypass run(): the install.sh is fetched via command substitution, so we
+  # must not let dry-run hit the network or dump the installer as an argument.
+  if [[ "$MODE" == "dry-run" ]]; then
+    echo "[dry-run] install oh-my-zsh via ohmyzsh/tools/install.sh"
+  else
+    env KEEP_ZSHRC=yes RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  fi
 else
   log "oh-my-zsh already installed"
 fi
