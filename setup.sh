@@ -6,11 +6,21 @@ set -e
 # =====================================
 
 # ---------- mode ----------
-MODE="apply" # apply | dry-run
+MODE="apply" # apply | dry-run | update | uninstall
 
 case "${1:-}" in
   --dry-run|--check)
     MODE="dry-run"
+    ;;
+  --update)
+    MODE="update"
+    ;;
+  "")
+    ;;
+  *)
+    echo "Unknown option: $1"
+    echo "Usage: setup.sh [--dry-run|--update]"
+    exit 1
     ;;
 esac
 
@@ -113,6 +123,9 @@ install_repo() {
   if [[ ! -d "$dest" ]]; then
     log "Installing $kind: $name"
     run git clone "$repo" "$dest" || log "WARN: failed to clone $kind $name, skipping"
+  elif [[ "$MODE" == "update" ]]; then
+    log "Updating $kind: $name"
+    run git -C "$dest" pull --ff-only || log "WARN: failed to update $kind $name, skipping"
   else
     log "$kind already exists: $name"
   fi
