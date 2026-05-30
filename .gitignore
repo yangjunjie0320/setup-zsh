@@ -1,0 +1,19 @@
+# Agent-facing docs and instruction files (not committed)
+# Human project docs (README.md, docs/, CHANGELOG.md, ...) are NOT ignored.
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.md
+GEMINI.md
+DESIGN.md
+.cursor/
+.cursorrules
+.windsurfrules
+.clinerules
+.github/copilot-instructions.md
+
+# Claude Code agent config (skills, hooks, settings) - all local
+.claude/
+
+# Backups produced by setup.sh
+*.bak
+*.bak.*
