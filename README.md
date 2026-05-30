@@ -1,6 +1,6 @@
 # setup-zsh
 
-Bootstrap zsh + Vim dotfiles with oh-my-zsh plugins and the powerlevel10k theme. Supports dry-run, update, and uninstall.
+Bootstrap zsh + Vim dotfiles with oh-my-zsh plugins. Supports dry-run, update, and uninstall.
 
 ## Structure
 - `setup.sh` – bootstrap script (`--dry-run`, `--update`, `--uninstall`)
@@ -13,7 +13,6 @@ Bootstrap zsh + Vim dotfiles with oh-my-zsh plugins and the powerlevel10k theme.
 ## Prerequisites
 - zsh installed
 - curl, git available
-- A [Nerd Font](https://www.nerdfonts.com/) in your terminal for powerlevel10k icons to render correctly
 
 ## Usage
 ```bash
@@ -29,7 +28,7 @@ Other modes (run from a cloned checkout):
 
 ## Customization
 - Plugins: edit `plugins/plugins.txt` then rerun `setup.sh`.
-- Themes: edit `themes.txt` (defaults to powerlevel10k).
+- Theme: set `ZSH_THEME` in `zsh/zshrc` (defaults to the built-in `fishy`). To use an external theme, add it to `themes.txt`.
 - Symlinks: edit `links.txt` to add/remove managed dotfiles.
 - Machine-specific tweaks: copy `zsh/local.zsh.example` to `~/.zsh/local.zsh`.
 - Vim: adjust `vim/vimrc`.
@@ -37,6 +36,4 @@ Other modes (run from a cloned checkout):
 ## Notes
 - If a target file exists and is not a symlink, `setup.sh` backs it up to `<file>.bak`
   (or a timestamped `<file>.bak.<ts>` if a `.bak` already exists) before linking.
-- powerlevel10k runs its configuration wizard on first launch; the generated
-  `~/.p10k.zsh` is sourced automatically on later sessions.
 - Restart the terminal after running to load the new config.

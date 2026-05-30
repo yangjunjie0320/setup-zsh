@@ -1,2 +1,3 @@
 # name repo_url (cloned into $ZSH_CUSTOM/themes/<name>)
-powerlevel10k https://github.com/romkatv/powerlevel10k.git
+# The active theme (fishy) is built into oh-my-zsh, so no external theme is
+# listed by default. Add a line here only for themes that need cloning.
