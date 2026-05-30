@@ -1,0 +1,4 @@
+# src (relative to repo)    dst (relative to $HOME)
+zsh/zshrc      .zshrc
+zsh/zprofile   .zprofile
+vim/vimrc      .vimrc

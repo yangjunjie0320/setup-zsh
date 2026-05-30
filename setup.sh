@@ -80,6 +80,9 @@ safe_link() {
 
   if [[ -e "$dst" && ! -L "$dst" ]]; then
     local bak="${dst}.bak"
+    if [[ -e "$bak" ]]; then
+      bak="${dst}.bak.$(date +%Y%m%d%H%M%S)"
+    fi
     log "Backing up existing $dst to $bak"
     run mv "$dst" "$bak"
   fi
@@ -88,9 +91,16 @@ safe_link() {
   log "Linked $dst"
 }
 
-safe_link "$SETUP_DIR/zsh/zshrc"     "$HOME/.zshrc"
-safe_link "$SETUP_DIR/zsh/zprofile"  "$HOME/.zprofile"
-safe_link "$SETUP_DIR/vim/vimrc"     "$HOME/.vimrc"
+LINK_FILE="$SETUP_DIR/links.txt"
+
+if [[ -f "$LINK_FILE" ]]; then
+  while read -r src dst || [[ -n "$src" ]]; do
+    [[ -z "$src" || "$src" =~ ^# ]] && continue
+    safe_link "$SETUP_DIR/$src" "$HOME/$dst"
+  done < "$LINK_FILE"
+else
+  log "No links.txt found, skipping symlink setup"
+fi
 
 # ---------- 3. install plugins ----------
 install_plugin() {
